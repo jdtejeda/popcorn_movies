@@ -1,6 +1,6 @@
 html,
 body {
-  padding: 0;
+  padding-top: 20px;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
@@ -13,4 +13,35 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.popcorn-red {
+  color: rgb(213,66,46);
+}
+
+.movie-carousel {
+  display: flex;
+  overflow: auto;
+  padding: 2%;
+}
+
+.movie-item {
+  text-align: center;
+  margin: 0 7px;
+  transition: transform 300ms ease 100ms;
+  border-top: 6px solid rgb(213,66,46);
+  border-right: 4px solid rgb(213,66,46);
+  border-radius: 3%;
+}
+
+.movie-carousel:hover .movie-item {
+  transform: translateX(-10%);
+}
+
+.movie-item:hover ~ .movie-item {
+  transform: translateX(10%);
+}
+
+.movie-item:hover {
+  transform: scale(1.1) !important;
 }
