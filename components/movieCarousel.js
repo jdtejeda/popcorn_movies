@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import MovieModal from '../components/movieModal.js';
 
 const MovieCarousel = (props) => {
     const [movies, setMovies] = useState([]);

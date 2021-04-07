@@ -4,12 +4,13 @@ if (typeof window !== "undefined") {
   require('jquery/dist/jquery.min.js')
   require('bootstrap/dist/js/bootstrap.min.js')
 }
+import styles from '../styles/Home.module.css'
 import NavBar from '../components/navBar.js'
 import SearchBar from '../components/searchBar.js'
 import MovieCarousel from '../components/movieCarousel.js'
 import CarouselTitle from '../components/carouselTitle.js'
 import MovieModal from '../components/movieModal.js';
-import styles from '../styles/Home.module.css'
+import SearchResultsList from '../components/searchResultsList.js'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
@@ -18,6 +19,8 @@ export default function Home() {
   const [popMovies, setPopMovies] = useState([]);
   const [topMovies, setTopMovies] = useState([]);
   const [modalMovie, setModalMovie] = useState([]);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     fetch('/apikey.txt')
@@ -26,13 +29,13 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if(apiKey){
-      fetch("https://api.themoviedb.org/3/movie/popular?api_key="+apiKey+"&language=en-US&page=1")
-      .then(r => r.json())
-      .then(json => setPopMovies(json.results))
-      fetch(" https://api.themoviedb.org/3/movie/top_rated?api_key="+apiKey+"&language=en-US&page=1")
-      .then(r => r.json())
-      .then(json => setTopMovies(json.results))
+    if (apiKey) {
+      fetch("https://api.themoviedb.org/3/movie/popular?api_key=" + apiKey + "&language=en-US&page=1")
+        .then(r => r.json())
+        .then(json => setPopMovies(json.results))
+      fetch(" https://api.themoviedb.org/3/movie/top_rated?api_key=" + apiKey + "&language=en-US&page=1")
+        .then(r => r.json())
+        .then(json => setTopMovies(json.results))
     }
   }, [apiKey])
 
@@ -47,30 +50,48 @@ export default function Home() {
         <NavBar />
         <div className='container'>
           <div className='row'>
-            <SearchBar apiKey={apiKey}/>
+            <SearchBar apiKey={apiKey} setSearchResults={setSearchResults} setShowSearch={setShowSearch} />
           </div>
+          {
+            showSearch &&
+            <div className='container border border-danger rounded'>
+              <div className='row'>
+                <div className='col'>
+                  <CarouselTitle text='Search Results' />
+                </div>
+                <div className='col my-auto'>
+                  <button type="button" class="close" aria-label="Close" onClick={()=>setShowSearch(false)}>
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              </div>
+              <div className='row'>
+                <SearchResultsList movies={searchResults} setModalMovie={setModalMovie} />
+              </div>
+            </div>
+          }
           <div className='row'>
             <CarouselTitle text='My Favorites' />
           </div>
           <div className='row'>
-            <MovieCarousel movies={favMovies} carouselName="fav" setModalMovie={setModalMovie}/>
+            <MovieCarousel movies={favMovies} carouselName="fav" setModalMovie={setModalMovie} />
           </div>
           <div className='row'>
             <CarouselTitle text='Popular Movies' />
           </div>
           <div className='row'>
-            <MovieCarousel movies={popMovies} carouselName="pop" setModalMovie={setModalMovie}/>
+            <MovieCarousel movies={popMovies} carouselName="pop" setModalMovie={setModalMovie} />
           </div>
           <div className='row'>
             <CarouselTitle text='Top Rated' />
           </div>
           <div className='row'>
-            <MovieCarousel movies={topMovies} carouselName="top" setModalMovie={setModalMovie}/>
+            <MovieCarousel movies={topMovies} carouselName="top" setModalMovie={setModalMovie} />
           </div>
-          <MovieModal movie={modalMovie} favMovies={favMovies} setFavMovies={setFavMovies}/>
+          <MovieModal movie={modalMovie} favMovies={favMovies} setFavMovies={setFavMovies} />
         </div>
       </main>
     </div>
-    
+
   )
 }

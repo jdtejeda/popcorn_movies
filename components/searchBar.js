@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 const SearchBar = (props) => {
     const [searchText, setSearchText] = useState("");
     const [apiKey, setApiKey] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
+    const setSearchResults = props.setSearchResults;
+    const setShowSearch = props.setShowSearch;
 
     useEffect(() =>{
         setApiKey(props.apiKey)
@@ -20,6 +21,7 @@ const SearchBar = (props) => {
             fetch("https://api.themoviedb.org/3/search/movie?api_key="+apiKey+"&language=en-US&query="+searchText+"&page=1&include_adult=false")
             .then(i => i.json())
             .then(json => setSearchResults(json.results.slice(0,5)))
+            setShowSearch(true);
         }
     }
 
